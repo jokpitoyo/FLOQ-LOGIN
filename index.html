@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>FLOQ</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+
+    #wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+      border: none;
+      outline: none;
+      display: none;
+      -webkit-playsinline: true;
+      playsinline;
+    }
+
+    #loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      font-family: sans-serif;
+      font-size: 16px;
+      z-index: 2;
+      background: #000;
+    }
+
+    /* ✨ Overlay putih untuk transisi */
+    #fadeWhite {
+      position: fixed;
+      inset: 0;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 10;
+    }
+
+    #fadeWhite.active {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="wrapper">
+    <div id="loading">Memuat video...</div>
+    <video id="intro" preload="auto" muted playsinline webkit-playsinline autoplay>
+      <source src="vidio.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <!-- ✨ Elemen transisi putih -->
+  <div id="fadeWhite"></div>
+
+  <script>
+    const vid = document.getElementById('intro');
+    const loading = document.getElementById('loading');
+    const fadeWhite = document.getElementById('fadeWhite');
+
+    vid.muted = true;
+    vid.autoplay = true;
+
+    function startVideo() {
+      vid.play().then(() => {
+        vid.style.display = 'block';
+        loading.style.display = 'none';
+      }).catch(() => {
+        document.body.addEventListener('touchstart', () => {
+          vid.play();
+          vid.style.display = 'block';
+          loading.style.display = 'none';
+        }, { once: true });
+      });
+    }
+
+    window.addEventListener('load', startVideo);
+
+    // ✨ Efek fade putih cepat sebelum ke halaman login
+    vid.addEventListener('ended', () => {
+      fadeWhite.classList.add('active');
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 200); // waktu animasi 0.3 detik
+    });
+  </script>
+</body>
+</html>
