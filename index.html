@@ -19,35 +19,27 @@
       height: 100%;
     }
 
+    /* 🔹 Video otomatis menyesuaikan ukuran semua layar */
     video {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      top: 50%;
+      left: 50%;
+      width: 110%; /* sedikit lebih kecil dari full screen */
+      height: auto;
+      transform: translate(-50%, -50%);
+      object-fit: contain; /* biar tidak terpotong */
       background: #000;
       border: none;
       outline: none;
       display: none;
-      -webkit-playsinline: true;
-      playsinline;
     }
 
+    /* 🔹 Hilangkan tampilan loading (tidak ditampilkan sama sekali) */
     #loading {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: #fff;
-      font-family: sans-serif;
-      font-size: 16px;
-      z-index: 2;
-      background: #000;
+      display: none !important;
     }
 
-    /* ✨ Overlay putih untuk transisi */
+    /* 🔹 Efek transisi putih halus */
     #fadeWhite {
       position: fixed;
       inset: 0;
@@ -61,48 +53,58 @@
     #fadeWhite.active {
       opacity: 1;
     }
+
+    /* 🔹 Responsif di layar HP */
+    @media (max-width: 480px) {
+      video {
+        width: 100%;
+        height: auto;
+      }
+    }
   </style>
 </head>
 <body>
   <div id="wrapper">
-    <div id="loading">Memuat video...</div>
+    <!-- 🔹 Loading dihapus, tapi tetap disertakan agar tidak error -->
+    <div id="loading"></div>
+
+    <!-- 🔹 Video utama -->
     <video id="intro" preload="auto" muted playsinline webkit-playsinline autoplay>
       <source src="vidio.mp4" type="video/mp4">
     </video>
   </div>
 
-  <!-- ✨ Elemen transisi putih -->
+  <!-- 🔹 Transisi putih -->
   <div id="fadeWhite"></div>
 
   <script>
     const vid = document.getElementById('intro');
-    const loading = document.getElementById('loading');
     const fadeWhite = document.getElementById('fadeWhite');
 
     vid.muted = true;
     vid.autoplay = true;
 
+    // Jalankan video tanpa tampilan loading
     function startVideo() {
       vid.play().then(() => {
         vid.style.display = 'block';
-        loading.style.display = 'none';
       }).catch(() => {
+        // Jika autoplay gagal (misalnya di iPhone), aktifkan saat disentuh
         document.body.addEventListener('touchstart', () => {
           vid.play();
           vid.style.display = 'block';
-          loading.style.display = 'none';
         }, { once: true });
       });
     }
 
     window.addEventListener('load', startVideo);
 
-    // ✨ Efek fade putih cepat sebelum ke halaman login
+    // 🔹 Saat video selesai, fade putih lalu lanjut ke halaman login
     vid.addEventListener('ended', () => {
       fadeWhite.classList.add('active');
       setTimeout(() => {
         window.location.href = 'login.html';
-      }, 200); // waktu animasi 0.3 detik
+      }, 300);
     });
   </script>
 </body>
