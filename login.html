@@ -6,28 +6,76 @@
   <title>Login/Daftar</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap');
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
-  body { background-color: #fff; color: #0B2C33; padding: 24px; overflow-x: hidden; position: relative; }
-  .back-btn { font-size: 26px; cursor: pointer; margin-bottom: 10px; }
-  h1 { font-size: 28px; font-weight: 900; margin-top: 20px; margin-bottom: 28px; }
-  .tab-switch { display: flex; justify-content: flex-start; background: #F2F3F5; border-radius: 50px; padding: 5px; width: 80%; max-width: 320px; margin-bottom: 40px; }
-  .tab { flex: 1; text-align: center; padding: 12px 0; border-radius: 50px; font-weight: 600; font-size: 14px; color: #8C9EA6; cursor: pointer; transition: all 0.25s ease-in-out; }
-  .tab.active { background: #fff; color: #0B2C33; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: #fff;
+    color: #0B2C33;
+    padding: 24px;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  .back-btn {
+    font-size: 26px;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-size: 26px;
+    font-weight: 900;
+    margin-top: 20px;
+    margin-bottom: 24px;
+  }
+
+  /* 🔹 TAB SWITCH diperbaiki supaya lebih ramping */
+  .tab-switch {
+    display: flex;
+    justify-content: flex-start;
+    background: #F2F3F5;
+    border-radius: 40px;
+    padding: 4px;
+    width: 80%;
+    max-width: 300px;
+    margin-bottom: 36px;
+  }
+
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;          /* lebih tipis dari 12px */
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 13px;         /* lebih kecil dari 14px */
+    color: #8C9EA6;
+    cursor: pointer;
+    transition: all 0.25s ease-in-out;
+  }
+
+  .tab.active {
+    background: #fff;
+    color: #0B2C33;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  }
 
   .input-section { width: 100%; display: none; }
   .input-section.active { display: block; }
 
-  /* 🔹 Perbaikan posisi agar sejajar */
   .phone-input {
     display: flex;
     align-items: center;
     font-weight: 800;
-    font-size: 21px;
+    font-size: 20px;
     color: #0B2C33;
-    border-bottom: 2px solid transparent;
     max-width: 360px;
     margin-top: 20px;
-    white-space: nowrap;
   }
 
   .flag {
@@ -41,25 +89,25 @@
 
   .country-code {
     font-weight: 800;
-    font-size: 20px;
+    font-size: 19px;
     margin: 0 6px;
     flex-shrink: 0;
   }
 
-  input[type="tel"],
-  input[type="email"] {
+  input[type="tel"], input[type="email"] {
     border: none;
     outline: none;
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 800;
     color: #0B2C33;
     width: 100%;
-    min-width: 0;
-    flex: 1;
     background: none;
   }
 
-  input::placeholder { color: #8C9EA6; font-weight: 500; }
+  input::placeholder {
+    color: #8C9EA6;
+    font-weight: 500;
+  }
 
   .btn-lanjut {
     position: fixed;
@@ -70,7 +118,6 @@
     justify-content: center;
     background: transparent;
     padding: 0 24px;
-    box-sizing: border-box;
   }
 
   button {
@@ -87,19 +134,33 @@
     transition: background-color 0.3s;
   }
 
-  button.active { background-color: #0B2C33; color: #E6FBE2; }
+  button.active {
+    background-color: #0B2C33;
+    color: #E6FBE2;
+  }
+
   button:active { transform: scale(0.98); }
 
-  #fadeWhite { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 999; }
+  #fadeWhite {
+    position: fixed;
+    inset: 0;
+    background: #fff;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 999;
+  }
+
   #fadeWhite.active { opacity: 1; }
 
-  /* 🔹 Tambahan agar tetap sejajar di semua device */
+  /* 🔹 Responsif agar tetap rapih di HP kecil */
   @media (max-width: 360px) {
+    .tab-switch { width: 90%; }
+    .tab { font-size: 12px; padding: 7px 0; }
     .phone-input { font-size: 18px; }
-    .country-code { font-size: 18px; }
-    input[type="tel"] { font-size: 18px; }
   }
 </style>
+
 
 </head>
 <body>
